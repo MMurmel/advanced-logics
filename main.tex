@@ -1,11 +1,19 @@
 \documentclass[a4paper]{report}
 \input{../preamble.tex}
 
-\title{Template}
+\title{Advanced logics}
+
+\usepackage[]{fontawesome}
+\makeatother
+\newcommand{\see}[1]{
+	\marginnote{\colorbox{gray!30}{\faEye\ \thelecture, #1}}
+}
+\makeatletter
 
 \begin{document}
 	\maketitle
 	\tableofcontents
 	% start of lectures
+	\input{lec1.tex}
 	% end of lectures
 \end{document}
