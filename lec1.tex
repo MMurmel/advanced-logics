@@ -11,5 +11,38 @@ I will try to reference the corresponding position in the script by the icon on 
 The first number will be the number of the lecture and everything following the page.
 
 \chapter{First-order Logic}
-
 \lecture{1}{15.04.2021}{}
+
+\section{FOL in nutshell}
+\subsection{Syntax of FOL}
+A vocabulary of FOL is a tuple $\var{Voc} = \left( \var{Pred}, \var{Func} \right)$,
+where $\var{Pred} = ( \var{Pred}_n)_{n \geq 1}$ and $\var{Func} = ( \var{Func}_m)_{m \geq 0}$ are pairwise disjoint families of predicate and function symbols
+for every arity $n$ and $m$.
+We often write $\var{Const}$ for $\var{Func}_0$, call its elements constant symbols,
+and identify $\var{Pred} \coloneqq \bigcup_{n \geq 1} \var{Pred}_n$ and $\var{Func} \coloneqq \bigcup_{m \geq 1} \var{Func}_m$.
+A vocabulary is called relational iff $\var{Func}_m = \emptyset$ for all $m \geq 1$ and purely relational iff $\var{Func} = \emptyset$.
+
+Variables are elements of some infinite countable set $\var{Var}$.
+
+\begin{definition}[Terms]
+	We define FOL terms over some vocabulary $\var{Voc}$ inductively:
+	\begin{itemize}
+		\item $x$ is a term for every $x \in \var{Var}$
+		\item if $t_1, \ldots, t_m$ are terms, then so is $f(t_1, \ldots, t_m)$ for every $f \in \var{Func}_m$ and some $m \in \N$
+	\end{itemize}
+\end{definition}
+
+\begin{definition}[Formulas]
+	FOL formulas are also defined inductively:
+	Let $x \in \var{Var}$, $P \in \var{Pred}_n$ for some $n \in \N$ and $t_1, \ldots, t_n$ be terms.
+	Then the following are FOL formulas (or formulas for short):
+	\begin{itemize}
+		\item $\var{true}$
+		\item $P(t_1, \ldots, t_n)$
+		\item $\phi_1 \land \phi_2$
+		\item $\neg \phi$
+		\item $\forall x.\phi$
+		\item $t_1 = t_2$ (optional)
+	\end{itemize}
+	where $\phi, \phi_1, \phi_2$ are also FOL formulas.
+\end{definition}
