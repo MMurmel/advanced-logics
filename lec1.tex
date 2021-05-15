@@ -2,7 +2,7 @@
 \setcounter{chapter}{-1}
 \chapter{Introduction}
 These are my lecture notes for the lecture "Advanced Logics" held by Prof. Dr. Christel Baier at TU Dresden in the summer semester 2021.
-They are meant to be a support in preparation for an oral exam.
+They are meant to be a reference book in preparation for an oral exam.
 Therefore it is not my goal to be as precise as the lecture script,
 but rather summarize it and highlight important results.
 Whenever details are left out,
@@ -20,29 +20,259 @@ where $\var{Pred} = ( \var{Pred}_n)_{n \geq 1}$ and $\var{Func} = ( \var{Func}_m
 for every arity $n$ and $m$.
 We often write $\var{Const}$ for $\var{Func}_0$, call its elements constant symbols,
 and identify $\var{Pred} \coloneqq \bigcup_{n \geq 1} \var{Pred}_n$ and $\var{Func} \coloneqq \bigcup_{m \geq 1} \var{Func}_m$.
-A vocabulary is called relational iff $\var{Func}_m = \emptyset$ for all $m \geq 1$ and purely relational iff $\var{Func} = \emptyset$.
+A vocabulary is called \textit{relational} iff $\var{Func}_m = \emptyset$ for all $m \geq 1$ and \textit{purely relational} iff $\var{Func} = \emptyset$.
 
 Variables are elements of some infinite countable set $\var{Var}$.
 
-\begin{definition}[Terms]
+\begin{definition}[Terms and Formulas]\see{p. 1-2}
 	We define FOL terms over some vocabulary $\var{Voc}$ inductively:
 	\begin{itemize}
 		\item $x$ is a term for every $x \in \var{Var}$
 		\item if $t_1, \ldots, t_m$ are terms, then so is $f(t_1, \ldots, t_m)$ for every $f \in \var{Func}_m$ and some $m \in \N$
 	\end{itemize}
+	FOL formulas are also defined inductively:
+	\begin{enumerate}
+		\item $\var{true}$ is a formula
+		\item if $P \in \var{Pred}_n$ for some $n \in \N$ and $t_1, \ldots, t_n$ are terms, \\
+			then $P(t_1, \ldots, t_n)$ is a formula
+		\item if $\phi_1, \phi_2, \phi$ are formulas, then so are $\phi_1 \land \phi_2$ and $\neg \phi$
+		\item if $\phi$ is a formula and $x \in \var{Var}$, then $\forall x.\phi$ is a formula
+		\item if $t_1, t_2$ are terms then $t_1 = t_2$ is a formula of FOL with equality
+	\end{enumerate}
+	Formulas obtained by 2.\ and 5.\ are called \textit{atomic formulas} or \textit{atoms}.
+	\textit{Literals} are atoms or their negations.
 \end{definition}
 
-\begin{definition}[Formulas]
-	FOL formulas are also defined inductively:
-	Let $x \in \var{Var}$, $P \in \var{Pred}_n$ for some $n \in \N$ and $t_1, \ldots, t_n$ be terms.
-	Then the following are FOL formulas (or formulas for short):
-	\begin{itemize}
-		\item $\var{true}$
-		\item $P(t_1, \ldots, t_n)$
-		\item $\phi_1 \land \phi_2$
-		\item $\neg \phi$
-		\item $\forall x.\phi$
-		\item $t_1 = t_2$ (optional)
-	\end{itemize}
-	where $\phi, \phi_1, \phi_2$ are also FOL formulas.
+We further derive the following logical operators:
+\begin{alignat*}{4}
+	&\phi_1 \lor \phi_2 &&\quad \defeq &&\quad \neg \left( \neg \phi_1 \land \neg \phi_2 \right) &&\quad \text{(disjunciton)}\\
+	&\phi_1 \to \phi_2 &&\quad \defeq &&\quad \neg \phi_1 \lor \phi_2 &&\quad \text{(implication)}\\
+	&\phi_1 \leftrightarrow \phi_2 &&\quad \defeq &&\quad (\phi_1 \land \phi_2) \lor (\neg \phi_1 \land \neg \phi_2) &&\quad \text{(equivalence)} \\
+	&\phi_1 \oplus \phi_2 &&\quad \defeq &&\quad (\phi_1 \land \neg \phi_2) \lor (\neg \phi_1 \land \phi_2) &&\quad \text{(xor, parity)} \\
+	&t_1 \neq t_2 &&\quad \defeq &&\quad \neg(t_1 = t_2) &&\\
+	&\var{false} &&\quad \defeq &&\quad \neg \var{true} &&
+\end{alignat*}
+
+\begin{mdframed}
+	We define the priority of the operators as follows from highest to lowest priority:
+	\[
+	\neg, \forall \text{ and } \exists, \land, \lor, \rightarrow, \leftrightarrow
+	.\]
+	E.g.\ :
+	\[
+		\neg P(t) \land \forall x.Q(x) \lor R(x,y) = \left( (\neg P(t)) \land (\forall x.Q(x)) \right) \lor R(x,y)
+	.\]
+\end{mdframed}
+
+Often we will skip the references to the vocabulary and variable-set and assume some fixed vocabulary.
+
+\subsubsection{Free variables}
+\see{p. 4}
+We distinguish the occurrences of variables in a formula $\phi$ into free and bound occurrences.
+\begin{definition}
+The set of free variables $\func{Free}(\phi)$ for a formula $\phi$ is defined inductively:
+\begin{align*}
+	\func{Free}(\var{true}) & \defeq \emptyset \\
+	\func{Free}(P(t_1, \ldots, t_n)) & \defeq \text{the variables appearing in } t_1,\ldots, t_n \\
+	\func{Free}(\neg \phi) & \defeq \func{Free}(\phi) \\
+	\func{Free}(\phi_1 \land \phi_2) & \defeq \func{Free}(\phi_1) \cup \func{Free}(\phi_2)\\
+	\func{Free}(\forall x.\phi) & \defeq \func{Free}(\phi) \setminus \left\{ x \right\}
+\end{align*}
 \end{definition}
+We say that $x$ is \textit{free} in $\phi$ if $x \in \func{Free}(\phi)$.
+
+\subsubsection{bounded renaming}
+Each formula $\phi$ can be transformed into an equivalent formula $\phi'$ such that no variable has both free and bounded occurrences.
+$\phi'$ is obtained from $\phi$ by replacing every bound variable with a fresh one, e.g.\ :
+\[
+	\forall x. P(x) \land Q(x) \text{ becomes } \forall y.P(y) \land Q(x)
+.\]
+
+\subsubsection{Sentences, closed formulas, generalizations}
+A formula $\phi$ is called  \textit{closed}, or a \textit{sentence}, if $\func{Free}(\phi) = \emptyset$.
+\begin{notation}
+We will write $\phi(x_1,\ldots,x_n)$ to indicate that $\func{Free}(\phi) \subseteq \left\{ x_1, \ldots, x_n \right\}$.
+To make things even shorter, we will equivalently use $\phi(\overline{x})$, where $\overline{x}$ denotes the tuple $(x_1, \ldots, x_n)$.
+Similarly, $\exists \overline{x}.\phi$ and $\forall \overline{x}.\phi$ stand for $\exists x_1 \cdots\exists x_n.\phi$ and 
+$\forall x_1 \cdots\forall x_n.\phi$.
+Furthermore, we will leave out the dots between consecutive quantifiers.
+\end{notation}
+
+If $\psi$ is a formula, then we call all formulas of the form $\forall x_1\cdots \forall x_n.\psi$ generalizations of $\psi$.
+
+\subsubsection{Substitution}
+We denote by $\phi[ x_1/t_1, \ldots, x_n/t_n]$ (for short $\phi[t_1,\ldots,t_n]$, $\phi[ \overline{x}/\overline{t}]$ or $\phi[ \overline{t}]$)
+the formula obtained from $\phi$ by simultaneously replacing all free occurrences of $x_i$ in $\phi$ with $t_i$.
+
+\subsubsection{Subformuals}
+\begin{definition}[Subformulas]
+	The set $\func{subf}(\phi)$ of \textit{subformulas} of $\phi$ is inductively defined:
+	\begin{align*}
+		\func{subf}(\phi) & \defeq \left\{ \phi \right\} \text{ if $\phi$ is true or an atomic formula} \\
+		\func{subf}(\neg \phi) & \defeq \left\{ \neg \phi \right\} \cup \func{subf}(\phi) \\
+		\func{subf}(\phi_1 \land \phi_2) & \defeq \left\{\phi_1 \land \phi_2 \right\} \cup \func{subf}(\phi_1) \cup \func{subf}(\phi_2) \\
+		\func{subf}(\forall x. \phi) & \defeq \left\{ \forall x. \phi \right\} \cup \func{subf}(\phi) \\
+	\end{align*}
+\end{definition}
+
+\subsubsection{Length and word length}
+\see{p. 5-6}
+We define two notions of the \textit{length} of a FOL formula.
+One ($\lvert \cdot \rvert$) adequate for structural induction and the other ($\lVert \cdot \rVert$) adequate for complexity theoretic arguments.
+In both cases we are only interested in the asymptotic (word) lengths.
+Therefore it is irrelevant if we view $\lor, \rightarrow$ and $\exists$ as derived operators or independent.
+
+\begin{definition}[Length of formulas]
+	The length $\lvert \phi \rvert$ of a formula $\phi$ is defined as the number of operators in $\phi$ :
+	\begin{align*}
+		\lvert \phi \rvert & \defeq 0 \text{\qquad if $\phi$ is $\var{true}$ on an atom} \\
+		\lvert \neg \phi \rvert & \defeq \lvert \phi \rvert + 1 \\
+		\lvert \phi_1 \land \phi_2 \rvert & \defeq \lvert \phi_1 \rvert + \lvert \phi_2 \rvert + 1 \\
+		\lvert \forall x.\phi \rvert & \defeq \lvert \phi \rvert + 1
+	\end{align*}
+\end{definition}
+And we get the following for every formula $\phi$ :
+\[
+	\lvert \func{subf}(\phi) \rvert \leq 2 \lvert \phi \rvert + 1 = \mathcal{O}(\lvert \phi \rvert)
+.\]
+
+\begin{definition}[Word-length of formulas]
+	The word-length $\lVert \phi \rVert$ of a formula $\phi$ measures the total number of symbols in $\phi$ :
+	\begin{align*}
+		\lVert x \rVert & \defeq 1 && \text{if $x$ is a variable}\\
+		\lVert c \rVert & \defeq 1 && \text{if $c \in \var{Const}$} \\
+		\lVert f(t_1,\ldots,t_n) \rVert & \defeq 1 + \sum_{i=1}^{n} \lVert t_i \rVert \\
+		\lVert \var{true} \rVert & \defeq 1 \\
+		\lVert P(t_1, \ldots, t_n) \rVert & \defeq 1 + \sum_{i=1}^{n} \lVert t_i \rVert \\
+		\lVert \neg \phi \rVert & \defeq \lVert \phi \rVert + 1\\
+		\lVert \phi_1 \land \phi_2 \rVert & \defeq \lVert \phi_1 \rVert + \lVert \phi_2 \rVert + 1 \\
+		\lVert \forall x.\phi \rVert & \defeq \lVert \phi \rVert + 1
+	\end{align*}
+\end{definition}
+\newpage
+
+\subsection{Semantics of FOL}
+\see{p. 7}
+\subsubsection{Structures}
+A structure for a vocabulary $\var{Voc} = (\var{Pred},\var{Func})$ is a tuple
+\[
+	\mathcal{A} = (\var{Dom}^{\mathcal{A}}, (P^{\mathcal{A}})_{P \in \var{Pred}}, (f^\mathcal{A})_{f \in \var{Func}})
+.\]
+A structure consists of a domain $\var{Dom}^\mathcal{A} \neq \emptyset$, that we will abbreviate by $\Delta^\mathcal{A}$,
+and tuples providing the interpretation for predicate and function symbols, i.e.\
+$P^{\mathcal{A}} \subseteq (\Delta^\mathcal{A})^n$ for $P \in \var{Pred}_n$ and $f^\mathcal{A}: (\Delta^\mathcal{A})^m \to \Delta^\mathcal{A}$ for $f \in \var{Func}_m$.
+$\mathcal{A}$ is called finite if $\Delta^\mathcal{A}$ is finite.
+
+\subsubsection{Interpretations}
+An interpretation for $(\var{Voc},\var{Var})$ is a pair $\mathcal{I}=(\mathcal{A},\mathcal{V})$, where $\mathcal{A}$ is  a structure for $\var{Voc}$ 
+and $\mathcal{V} : \var{Var} \to \Delta^\mathcal{A}$ is a variable valuation.
+We call $(\mathcal{A}, \mathcal{V})$ an $\mathcal{A}$-interpretation.
+The meaning of terms under an $\mathcal{A}$-interpretation $\mathcal{I}$ is defined as follows:
+\begin{itemize}
+	\item $x^\mathcal{I} \defeq \mathcal{V}(x)$ for each $x \in \var{Var}$ 
+	\item $f(t_1, \ldots, t_m)^\mathcal{I} \defeq f^\mathcal{A}(t_1^\mathcal{I}, \ldots, t_m^\mathcal{I})$ for each $f \in \var{Func}_m$
+\end{itemize}
+Therefore $c^\mathcal{I} = c^\mathcal{A}$ for each $c \in \var{Func}_0 = \var{Const}$.
+
+\subsubsection{Satisfaction relation $\vDash$}
+\see{p. 7-8}
+Let $\mathcal{I} = (\mathcal{A}, \mathcal{V})$ be an interpretation, $x \in \var{Var}$ and $a \in \Delta^\mathcal{A}$. \\
+We define $\mathcal{I}[x \coloneqq a] \defeq (\mathcal{A}, \mathcal{V}[x \coloneqq a])$, where
+\[
+	\mathcal{V}[x \coloneqq a](y) = \begin{cases}
+		\mathcal{V}(y) & \text{if } y \neq x \\
+		a & \text{if } y = x
+	\end{cases}
+.\]
+
+\begin{definition}[Satisfaction relation]
+	We define the satisfaction relation $\vDash$ between interpretations $\mathcal{I} = (\mathcal{A}, \mathcal{V})$ and formulas $\phi$ by structural induction:
+	\begin{alignat*}{3}
+		\mathcal{I} & \vDash \var{true} &&&&\\
+		\mathcal{I} & \vDash P(t_1, \ldots, t_n) && \iff && (t_1^\mathcal{I}, \ldots, t_n^\mathcal{I}) \in P^\mathcal{A} \\
+		\mathcal{I} & \vDash \phi_1 \land \phi_2 && \iff && \mathcal{I} \vDash \phi_1 \text{ and } \mathcal{I} \vDash \phi_2 \\
+		\mathcal{I} & \vDash \neg \phi && \iff && \mathcal{I} \not\vDash \phi \\
+		\mathcal{I} & \vDash \forall x.\phi && \iff && \mathcal{I}[x \coloneqq a] \vDash \phi \text{ for all } a \in \Delta^\mathcal{A} \\
+		\mathcal{I} & \vDash (t_1 = t_2) && \iff && t_1^\mathcal{I} = t_2^\mathcal{I}
+	\end{alignat*}
+\end{definition}
+\begin{notation}
+	We use the notation 
+	\[
+		(\mathcal{A}, a_1, \ldots, a_n) \vDash \phi(x_1, \ldots, x_n)
+	\]
+	to indicate that some $\mathcal{A}$-interpretation that interprets the variables $x_i$ by $a_i$ satisfies $\phi(x_1, \ldots, x_n)$.
+	Obviously the interpretation relation does not depend on the valuation of bound variables in a formula.
+\end{notation}
+
+\subsubsection{Models}
+An interpretation $\mathcal{I}$ is called a \textit{model} for a formula $\phi$ if $\mathcal{I} \vDash \phi$. \\
+An interpretation $\mathcal{I}$ is called a \textit{model} for a formula-set $\mathfrak{F}$ if $\mathcal{I} \vDash \phi$ for all $\phi \in \mathfrak{F}$. \\
+A structure $\mathcal{A}$ is called a \textit{model} for a formula $\phi$ if $(\mathcal{A}, \mathcal{V}) \vDash \phi$ for every $\mathcal{V} : \var{Var} \to \Delta^\mathcal{A}$.
+Thus, if $\func{Free}(\phi) = \left\{ x_1, \ldots, x_n \right\}$, then
+\[
+\mathcal{A} \vDash \phi \iff \mathcal{A} \vDash \forall x_1\cdots \forall x_n.\phi
+.\]
+A structure $\mathcal{A}$ is called a \textit{model} for a formula-set $\mathfrak{F}$ if $\mathcal{A} \vDash \phi$ for all $\phi \in \mathfrak{F}$.
+
+\subsubsection{Substitution lemma}
+\see{p. 8}
+We say that a variable $x$ can be replaced with a term $t$ in a formula $\phi$ iff this substitution $\phi(x/t)$ would not create a new binding.
+\begin{lemma}[Substitution lemma]
+	Let $\mathcal{I} = (\mathcal{A}, \mathcal{V})$ be an interpretation, $\phi$ a formula,
+	$x_1, \ldots, x_n$ pairwise distinct variables and $t_1, \ldots, t_n$ terms
+	such that $x_i$ can be replaced in $\phi$ with $t_i$.
+	Then:
+	 \[
+		 \mathcal{I} \vDash \phi[x_1/t_1, \ldots, x_n/t_n] \iff \mathcal{I}[x_1 \coloneqq t_1^\mathcal{I}, \ldots, x_n \coloneqq t_n^\mathcal{I}] \vDash \phi
+	.\]
+\end{lemma}
+
+\subsubsection{Validity}
+We say a formula $\phi$ is \textit{valid} and write $\Vdash \phi$ if $\mathcal{I} \vDash \phi$ for all interpretations $\mathcal{I}$.
+
+\subsubsection{Propositional tautology}
+We cal a FOL-formula $\phi$ a \textit{propositional tautology} if $\phi = \varphi[\overline{q}/\overline{\psi}]$
+for any valid propositional formula $\varphi$, boolean variables $\overline{q}$ and FOL-formulas $\overline{\psi}$.
+
+\subsubsection{Satisfiability}
+\see{p. 9}
+A formula $\phi$ is called \textit{satisfiable} if $\mathcal{I} \vDash \phi$  for some interpretation $\mathcal{I}$ (similar for formula set $\mathfrak{F}$).
+A formula set $\mathfrak{F}$ is called 
+\begin{itemize}
+	\item \textit{finitely satisfiable} if each finite subset of $\mathfrak{F}$ is satisfiable,
+	\item \textit{satisfiable over structure} $\mathcal{A}$, if $(\mathcal{A},\mathcal{V}) \vDash \mathfrak{F}$ for some valuation $\mathcal{V}$,
+	\item \textit{true in structure} $\mathcal{A}$ if $\mathcal{A} \vDash \phi$ for all $\phi \in \mathfrak{F}$.
+\end{itemize}
+Truth in some structure implies satisfiability; the reverse implication only holds for formula-sets of sentences.
+
+\subsubsection{Equivalence $\equiv$}
+Formulas $\phi, \psi$ are called equivalent, denoted $\phi \equiv \psi$ iff for all interpretations $\mathcal{I}$:
+\[
+\mathcal{I} \vDash \phi \iff \mathcal{I} \vDash \psi
+.\]
+
+\subsubsection{Logical consequence, consequence relation $\Vdash$}
+If $\mathfrak{F}$ is a formula set, then formula $\phi$ is called \textit{logical consequence} of $\mathfrak{F}$, denoted $\mathfrak{F} \Vdash \phi$ iff for all interpretations $\mathcal{I}$ :
+\[
+\mathcal{I} \vDash \mathfrak{F} \implies \mathcal{I} \vDash \phi
+.\]
+\begin{notation}
+For formulas $\phi,\psi$ we write $\phi \Vdash \psi$ iff $\left\{ \phi \right\} \Vdash \psi$.
+\end{notation}
+
+If $\mathfrak{F}$ is a formula set, then the set
+\[
+	\func{Cl}(\mathfrak{F}) \defeq \left\{ \phi \mid \mathfrak{F} \Vdash \phi \right\}
+\]
+is called the \textit{logical closure} of $\mathfrak{F}$.
+
+\begin{example}
+	Here are some handy equivalences:
+	\begin{itemize}
+		\item $\mathfrak{F} \Vdash \phi \iff \mathfrak{F} \cup \left\{ \neg \phi \right\}$ is unsatisfiable
+		\item $\phi \equiv \psi \iff \phi \Vdash \psi$ and $\psi \Vdash \phi$
+		\item $\Vdash \psi \iff \neg \phi$ is unsatisfiable $ \iff \var{true} \Vdash \phi \iff \psi \Vdash \phi$ for all $\psi$
+		\item $\phi$ is unsatisfiable $\iff \Vdash \neg \phi \iff \phi \Vdash \var{false} \iff \phi \Vdash \psi$ for all $\psi$
+	\end{itemize}
+\end{example}
