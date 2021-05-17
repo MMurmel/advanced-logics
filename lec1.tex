@@ -81,7 +81,7 @@ The set of free variables $\func{Free}(\phi)$ for a formula $\phi$ is defined in
 \end{definition}
 We say that $x$ is \textit{free} in $\phi$ if $x \in \func{Free}(\phi)$.
 
-\subsubsection{bounded renaming}
+\subsubsection{Bounded renaming}
 Each formula $\phi$ can be transformed into an equivalent formula $\phi'$ such that no variable has both free and bounded occurrences.
 $\phi'$ is obtained from $\phi$ by replacing every bound variable with a fresh one, e.g.\ :
 \[
@@ -267,12 +267,12 @@ If $\mathfrak{F}$ is a formula set, then the set
 \]
 is called the \textit{logical closure} of $\mathfrak{F}$.
 
-\begin{example}
-	Here are some handy equivalences:
+\begin{lemma}
+	The following equivalences hold for any FOL-formula set $\mathfrak{F}$ and FOL-formulas $\phi, \psi$ :
 	\begin{itemize}
 		\item $\mathfrak{F} \Vdash \phi \iff \mathfrak{F} \cup \left\{ \neg \phi \right\}$ is unsatisfiable
 		\item $\phi \equiv \psi \iff \phi \Vdash \psi$ and $\psi \Vdash \phi$
-		\item $\Vdash \psi \iff \neg \phi$ is unsatisfiable $ \iff \var{true} \Vdash \phi \iff \psi \Vdash \phi$ for all $\psi$
+		\item $\Vdash \phi \iff \neg \phi$ is unsatisfiable $ \iff \var{true} \Vdash \phi \iff \psi \Vdash \phi$ for all $\psi$
 		\item $\phi$ is unsatisfiable $\iff \Vdash \neg \phi \iff \phi \Vdash \var{false} \iff \phi \Vdash \psi$ for all $\psi$
 	\end{itemize}
-\end{example}
+\end{lemma}
