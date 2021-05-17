@@ -1,0 +1,85 @@
+\subsubsection{Isomorphism and homomorphism}
+\lecture{2}{16.04.2021}{}
+Two structures $\mathcal{A}, \mathcal{B}$ for the same vocabulary $\var{Voc}$ are called \textit{isomorphic} if
+there exists a bijection $h : \Delta^\mathcal{A} \to \Delta^\mathcal{B}$ such that
+\begin{itemize}
+	\item $P^\mathcal{B} = \left\{ (h(a_1), \ldots, h(a_n)) \mid (a_1, \ldots, a_n) \in P^\mathcal{A} \right\}$ for all $P \in \var{Pred}_n$,
+	\item $f^\mathcal{B}(h(a_1), \ldots, h(a_m)) = h(f^\mathcal{A}(a_1, \ldots, a_m))$ for all $a_1,\ldots,a_m \in \Delta^\mathcal{A}$ and $f \in \var{Func}_m$.
+\end{itemize}
+In this case, $h$ is called an \textit{isomorphism} from $\mathcal{A}$ to $\mathcal{B}$ and we have:
+\[
+	(\mathcal{A}, \mathcal{V}) \vDash \phi \iff (\mathcal{B}, h \circ \mathcal{V}) \vDash \phi
+\]
+for all formulas $\phi$.
+The satisfaction relation $\vDash$ does not distinguish between isomorphic structures, i.e.\ structures that are the same up to renaming of elements.
+\see{p. 11}
+
+A \textit{homomorphism} from $\mathcal{A}$ to $\mathcal{B}$ is a function $h : \Delta^\mathcal{A} \to \Delta^\mathcal{B}$ such that
+\begin{itemize}
+	\item $(a_1, \ldots, a_n) \in P^\mathcal{A} \iff (h(a_1), \ldots, h(a_n)) \in P^\mathcal{B}$ for all $P \in \var{Pred}_n$ and $a_1, \ldots, a_n \in \Delta^\mathcal{A}$ 
+	\item $f^\mathcal{B}(h(a_1), \ldots, h(a_m)) = h(f^\mathcal{A}(a_1, \ldots, a_m))$ for all $a_1,\ldots,a_m \in \Delta^\mathcal{A}$ and $f \in \var{Func}_m$.
+\end{itemize}
+Homomorphism in general do however only preserve the truth values of quantifier-free FOL-formulas without equality.
+For surjective homomorphism we gain:
+\[
+	(\mathcal{A}, \mathcal{V}) \vDash \phi \iff (\mathcal{B}, h \circ \mathcal{V}) \vDash \phi
+\]
+for formulas $\phi$ without equality.
+
+\subsection{Positive normal forms (PNF)}
+In \textit{positive normal form} (PNF), also called \textit{negation normal form},
+negations may only appear in front of atomic formulas $P(t_1, \ldots, t_n)$ and $t_1 = t_2$.
+We therefore also need $\lor$ and $\exists$ in the syntax.
+We also define $\var{false} \coloneqq \neg \var{tue}$ and $t_1 \neq t_2 \coloneqq \neg (t_1 = t_2)$.
+
+Every FOL-formula $\phi$ can be transformed into an equivalent PNF-formula.
+
+\subsection{Prenex and Skolem form}
+\subsubsection{Prenex form}
+A FOL-formula is in \textit{prenex form} if it is of type $Q_1 x_1 \ldots Q_n x_n.\psi$, where $Q_i \in \left\{ \forall, \exists \right\}$
+and $\psi$ is a quantifier free formula, called the \textit{matrix}.
+Every FOL-formula $\phi$ has an equivalent formula in prenex form obtained by:
+\begin{enumerate}
+	\item constructing an equivalent PNF-formula $\phi_{\var{PNF}}$ 
+	\item creating an equivalent formula $\phi_{\var{PNF}}'$ such that no variable is bound twice and no variable occurs both bound and free
+	\item transforming $\phi_{\var{PNF}}'$ into an equivalent prenex formula $\phi_{\var{prenex}}$ by moving all quantifiers to the left.
+\end{enumerate}
+Step 2 can be accomplished with the concept of bound renaming.
+To perform step 3 the following equivalences are needed:
+\begin{lemma}
+Let $\phi, \psi$ be FOL-formulas, $x \in \var{Var}$ and $x$ does not appear in $\psi$.
+Then the following hold:
+\begin{align*}
+	(\forall x.\phi) \land \psi &\equiv \forall x.(\phi \land \psi) \\
+	(\exists x. \phi) \land \psi &\equiv \exists x.(\phi \land \psi)\\
+	(\forall x.\phi) \lor \psi &\equiv \forall x.(\phi \lor \psi) \\
+	(\exists x. \phi) \lor \psi &\equiv \exists x.(\phi \lor \psi)
+\end{align*}
+\end{lemma}
+
+\subsubsection{Skolem form}
+A FOL-formula is in \textit{skolem form} if it is in prenex form and all quantifiers are universal,
+i.e.\ $Q_1 = \ldots = Q_n = \forall$.
+Every FOL-formula $\phi$ has an equisatisfiable formula in skolem form obtained by:
+\begin{enumerate}
+	\item transforming $\phi$ into an equivalent prenex FOL-formula $\phi_{\var{prenex}}$ 
+	\item replacing all existential quantifiers.
+		Consider the left most existential quantifier in $\phi$:
+		\[
+		\phi = \forall x_1 \ldots \forall x_k \exists y.\psi
+		.\]
+		We obtain an equisatisfiable formula $\phi'$ by:
+		\[
+			\phi' = \forall x_1 \ldots \forall x_k.\psi[y/f(x_1, \ldots, x_k)]
+		,\]
+		where $f$ is a new $k$-ary function symbol.
+		We can then recursively apply this transformation until there is no existential quantifier left and thereby obtain $\phi_{\var{skolem}}$.
+\end{enumerate}
+
+\subsection{FOL without function symbols}
+\see{p. 13-15}
+FOL with purely relational vocabularies is as expressive as full FOL.
+Every FOL-formula has an equivalent FOL-formula over a purely relational vocabulary in the following sense:
+Given a formula $\phi$ over a vocabulary $\var{Voc}$, there is a formula $\phi_{rel}'$ over a purely relational vocabulary $\var{Voc}_{\var{rel}}$,
+such that $\phi$ is satisfiable over some structure with domain $\Delta$ iff so is $\phi_{\var{rel}}'$.
+Furthermore, $\phi$ and $\phi_{\var{rel}}'$ have the same asymptotic (word-) lengths and there is an algorithm to compute $\phi_{\var{rel}}'$ from $\phi$.
