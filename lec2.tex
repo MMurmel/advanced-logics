@@ -16,7 +16,7 @@ The satisfaction relation $\vDash$ does not distinguish between isomorphic struc
 
 A \textit{homomorphism} from $\mathcal{A}$ to $\mathcal{B}$ is a function $h : \Delta^\mathcal{A} \to \Delta^\mathcal{B}$ such that
 \begin{itemize}
-	\item $(a_1, \ldots, a_n) \in P^\mathcal{A} \iff (h(a_1), \ldots, h(a_n)) \in P^\mathcal{B}$ for all $P \in \var{Pred}_n$ and $a_1, \ldots, a_n \in \Delta^\mathcal{A}$ 
+	\item $(a_1, \ldots, a_n) \in P^\mathcal{A} \iff (h(a_1), \ldots, h(a_n)) \in P^\mathcal{B}$ for all $P \in \var{Pred}_n$ and $a_1, \ldots, a_n \in \Delta^\mathcal{A}$
 	\item $f^\mathcal{B}(h(a_1), \ldots, h(a_m)) = h(f^\mathcal{A}(a_1, \ldots, a_m))$ for all $a_1,\ldots,a_m \in \Delta^\mathcal{A}$ and $f \in \var{Func}_m$.
 \end{itemize}
 Homomorphism in general do however only preserve the truth values of quantifier-free FOL-formulas without equality.
@@ -40,7 +40,7 @@ A FOL-formula is in \textit{prenex form} if it is of type $Q_1 x_1 \ldots Q_n x_
 and $\psi$ is a quantifier free formula, called the \textit{matrix}.
 Every FOL-formula $\phi$ has an equivalent formula in prenex form obtained by:
 \begin{enumerate}
-	\item constructing an equivalent PNF-formula $\phi_{\var{PNF}}$ 
+	\item constructing an equivalent PNF-formula $\phi_{\var{PNF}}$
 	\item creating an equivalent formula $\phi_{\var{PNF}}'$ such that no variable is bound twice and no variable occurs both bound and free
 	\item transforming $\phi_{\var{PNF}}'$ into an equivalent prenex formula $\phi_{\var{prenex}}$ by moving all quantifiers to the left.
 \end{enumerate}
@@ -62,7 +62,7 @@ A FOL-formula is in \textit{skolem form} if it is in prenex form and all quantif
 i.e.\ $Q_1 = \ldots = Q_n = \forall$.
 Every FOL-formula $\phi$ has an equisatisfiable formula in skolem form obtained by:
 \begin{enumerate}
-	\item transforming $\phi$ into an equivalent prenex FOL-formula $\phi_{\var{prenex}}$ 
+	\item transforming $\phi$ into an equivalent prenex FOL-formula $\phi_{\var{prenex}}$
 	\item replacing all existential quantifiers.
 		Consider the left most existential quantifier in $\phi$:
 		\[
@@ -83,3 +83,88 @@ Every FOL-formula has an equivalent FOL-formula over a purely relational vocabul
 Given a formula $\phi$ over a vocabulary $\var{Voc}$, there is a formula $\phi_{rel}'$ over a purely relational vocabulary $\var{Voc}_{\var{rel}}$,
 such that $\phi$ is satisfiable over some structure with domain $\Delta$ iff so is $\phi_{\var{rel}}'$.
 Furthermore, $\phi$ and $\phi_{\var{rel}}'$ have the same asymptotic (word-) lengths and there is an algorithm to compute $\phi_{\var{rel}}'$ from $\phi$.
+
+\subsection{Many-sorted FOL}
+\see{p. 15-18}
+This is a variation of FOL that uses so called sorts to distinguish different variable, predicate and function types.
+One can think of it as data types in programming languages.
+
+More formally, a vocabulary of many-sorted FOL is a triple
+\[
+	\var{Voc}_{\var{ms}} = \left( \var{Pred}, \var{Func}, \var{Sorts} \right)
+,\]
+where $\var{Pred}$ and $\var{Func}$ are as for standart FOL and $\var{Sorts}$ is a nonempty set of sorts.
+Then, every variable $x$ gets associated with a sort $\func{sort}(x) \in \var{Sort}$.
+Similarly, $m$-ary function symbols $f$ get associated with a tuple of sorts
+\[
+	\func{sort}(f) = \left( S_1, \ldots, S_m, S \right) \in \var{Sorts}^{m+1}
+,\]
+stating, that $f : S_1 \times \ldots \times S_m \to S$
+and likewise for $n$-ary predicate symbols $P$ :
+\[
+	\func{sort}(P) = (S_1, \ldots, S_n) \in \var{Sorts}^n
+\]
+stands for $P \subseteq S_1 \times \ldots \times S_n$.
+\begin{note}
+	Both $f : S_1 \times \ldots \times S_m \to S$ and $P \subseteq S_1 \times \ldots \times S_n$ are strictly speaking not correct,
+	since $f$ and $P$ are only symbols and the semantics of $S_i$ is not yet defined.
+	More formally, one would introduce the notion of a structure  $\mathcal{A}$ of many-sorted FOL and then write
+	$f^\mathcal{A} : S_1^\mathcal{A} \times \ldots \times S_m^\mathcal{A} \to S^\mathcal{A}$ and
+	$P^\mathcal{A} \subseteq S_1^\mathcal{A} \times \ldots \times S_n^\mathcal{A}$,
+	where for each sort $S_i$, $S_i^\mathcal{A}$ is a nonempty set.
+\end{note}
+Variable valuations and the semantics of formulas over many-sorted FOL are then defined in the same way,
+always respecting the sort-consistency.
+
+However, many-sorted FOL is as expressive as standard FOL.
+
+\newpage
+\section{Deductive Calculi for FOL}
+\see{p. 18-19}
+The goal of deductive calculi (proof systems) is to reason about validity or consequences of formulas based on their \textit{syntax} rather than their semantics.
+Obviously, this is desired, since proving validity or consequence relations by hand can be time-consuming and complicated.
+Proof systems typically consist of finitely many \textit{axioms} and \textit{proof rules}, often simply called \textit{rules}.
+Proof rules are often written as follows:
+\[
+	\infer{\Xi}{\Xi_1, \ldots, \Xi_n}
+\]
+The meaning of this rule is roughly: "If $\Xi_1,\ldots,\Xi_n$ are provable, then so is $\Xi$."
+\begin{note}
+    The $\Xi_i$'s and $\Xi$ are FOL-formulas, that might contain formula symbols (denoted by $\Phi, \Psi, \Theta, \ldots$).
+    These range over all formulas over some fixed vocabulary an variable set.
+	Concrete substitutions of the formula symbols by concrete formulas are called \textit{instances} of this rule.
+\end{note}
+\begin{example}
+    The following rule is called  \textit{modus ponens}:
+    \[
+	\infer{\Psi}{\Phi, \Phi \to \Psi}
+    \]
+And here is an instance of it:
+\[
+	\infer{\forall x.P(x)}{\exists y.Q(y), \exists y.Q(y) \to \forall x.P(x)}
+\]
+\end{example}
+
+\subsection{Hilbert proof systems}
+A Hilbert proof system $\mathfrak{D}$ consists of a finite set of rules.
+Formally, each rule is a decidable set of $(n+1)$-tuples for some $n \in \N$.
+Value $n$ is the arity of the rule.
+Rules of arity 0 are called \textit{axioms}.
+
+Let $\mathfrak{F}$ be a set of formulas.
+A $\mathfrak{D}$-derivation (or $\mathfrak{D}$-proof) from $\mathfrak{F}$ is a sequence $\psi_1, \ldots, \psi_m$ of formulas such that
+for $1 \leq i \leq m$ at least one of the following holds:
+\begin{itemize}
+	\item $\psi_i$ is an element of $\mathfrak{F}$
+	\item $\psi_i$ is an instance of an axiom
+	\item there is an instance $(\psi_1, \ldots, \psi_n, \psi)$ of some $n$-ary proof rule in $\mathfrak{D}$ such that
+		$n \geq 1$ and $\psi_i = \phi$ and $\left\{ \phi_1, \ldots, \phi_n \right\} \subseteq \left\{ \psi_1, \ldots, \psi_{i-1} \right\}$.
+\end{itemize}
+
+The derivation relation $\vdash_{\mathfrak{D}}$ is defined as follows:
+\[
+\mathfrak{F} \vdash_{\mathfrak{D}} \phi \iff \text{there exists a $\mathfrak{D}$-proof $\psi_1, \ldots, \psi_m$ from $\mathfrak{F}$ such that $\psi_m = \psi$}
+.\]
+We say $\phi$ is said to be $\mathfrak{D}$-provable from $\mathfrak{F}$ if $\mathfrak{F} \vdash_{\mathfrak{D}} \phi$. \\
+If $\mathfrak{F} = \emptyset$ we simply write $\vdash_{\mathfrak{D}} \phi$ and call $\phi$ $\mathfrak{D}$-provable. \\
+If $\phi$ and $\psi$ are formulas, $\phi \vdash_{\mathfrak{D}} \psi$ shall denote $\left\{ \phi \right\} \vdash_{\mathfrak{D}} \psi$.
