@@ -1,0 +1,103 @@
+\lecture{3}{22.04.21}{}
+\begin{definition}[Sondness]
+	A Hilbert proof system $\mathfrak{D}$ is called \textit{sound}, if for each formula-set $\mathfrak{F}$
+	and each formula $\phi$ the following holds:
+	\[
+	\mathfrak{F} \vdash_{\mathfrak{D}} \phi \text{ implies } \mathfrak{F} \Vdash \phi
+	.\]
+\end{definition}
+\begin{lemma}[Criterion for soundness]
+	$\mathfrak{D}$ is sound if and only if the following hold:
+	\begin{itemize}
+		\item all instances of the axioms in $\mathfrak{D}$ are valid and
+		\item whenever $\left( \phi_1, \ldots, \phi_n, \phi \right)$ is an instance of a proof rule in $\mathfrak{D}$,
+			then $\left\{ \phi_1, \ldots, \phi_n \right\} \Vdash \phi$.
+	\end{itemize}
+\end{lemma}
+
+\begin{definition}[Completeness and weak completeness]
+	A Hilbert proof system $\mathfrak{D}$ is called \textit{complete}, if for each formula-set $\mathfrak{F}$
+	and each formula $\phi$ the following holds:
+	\[
+	\mathfrak{F} \Vdash \phi \text{ implies } \mathfrak{F} \vdash_{\mathfrak{D}} \phi
+	.\]
+	\textit{Weak completeness} is the property, that all valid formula are $\mathfrak{D}$-provable, i.e.:
+	\[
+	\Vdash \phi \text{ implies } \vdash_{\mathfrak{D}} \phi
+	.\]
+\end{definition}
+
+Soundness and completeness are really only two sides of this implication, 
+hence for sound and complete $\mathfrak{D}$ we have $\mathfrak{F} \vdash_{\mathfrak{D}} \phi \iff \mathfrak{F} \Vdash \phi$.
+
+\see{p. 20-22}
+\begin{theorem}[Gödel's completeness theorem]
+	There exists a Hilbert proof system that is sound and complete for FOL.
+\end{theorem}
+In the lecture modus ponens and eight axioms are used to build the sound and complete proof system $\mathfrak{D}_{\var{PL}}$
+for propositional logic.
+
+For FOL, the proof system $\mathfrak{D}_{\var{FOL}}$ is shown, consisting of modus ponens and the following axioms:
+\begin{itemize}
+	\item (Q0) the set of all generalizations of propositional tautologies
+	\item (Q1) $\forall x.\Phi \to \Phi[x/t]$ if $x$ can be replaced with $t$ in $\Phi$ 
+	\item (Q2) $\Phi \to \forall x.\Phi$ if $x \notin \func{Free}(\Phi)$
+	\item (Q3) $\forall x.(\Phi \to \Psi) \to \left( \forall x.\Phi \to \forall x.\Psi \right)$
+\end{itemize}
+
+\see{p. 23f.}
+\begin{theorem}[Soundness and completeness of $\mathfrak{D}_{\var{FOL}}$]
+	$\mathfrak{D}_{\var{FOL}}$ is sound and complete, i.e.,
+	if $\mathfrak{F}$ is a set of FOL-formulas and $\phi$ a FOL-formula without equality then:
+	\[
+	\mathfrak{F} \Vdash \phi \iff \mathfrak{F} \vdash_{\mathfrak{D}_{\var{FOL}}} \phi
+	.\]
+\end{theorem}
+
+A property useful in the completeness proof for $\mathfrak{D}_{\var{FOL}}$ is the following deduction property.
+\begin{lemma}[Deduction property]
+	Let $\mathfrak{D}$ be a Hilbert proof system that is complete for propositional logic
+	and uses the modus ponens, but no other proof rule of arity one or more.
+	The, for all sets $\mathfrak{F}$ of formula and all formulas $\phi$:
+	\[
+	\mathfrak{F} \vdash_{\mathfrak{D}} \phi \to \psi \iff \mathfrak{F} \cup \left\{ \phi \right\} \vdash_{\mathfrak{D}} \psi
+	.\]
+\end{lemma}
+\begin{note}
+	Whenever $\mathfrak{D}$ is a Hilbert proof system that enjoys the deduction property,
+	then the modus ponens is a derivable proof rule.
+\end{note}
+
+\see{p. 25f.}
+Deductive calculi form the bridge between satisfiability and the (syntactic) notion of \textit{consistency}.
+\begin{lemma}[$\mathfrak{D}$-(in)consistency]
+	Let $\mathfrak{D}$ be a Hilbert proof system that is complete for propositional logic
+	and enjoys the deduction property.
+	Then, for all formula sets $\mathfrak{F}$ the following are equivalent:
+	\begin{itemize}
+		\item $\mathfrak{F} \vdash_{\mathfrak{D}} \var{false}$ 
+		\item There exists a formula $\psi$ such that $\mathfrak{F} \vdash_{\mathfrak{D}} \psi$ and $\mathfrak{F} \vdash_{\mathfrak{D}} \neg \psi$
+		\item $\mathfrak{F} \vdash_{\mathfrak{D}} \phi$ for all formulas $\psi$
+	\end{itemize}
+	If one of these conditions hold, $\mathfrak{D}$ is called \textit{inconsistent}, otherwise \textit{consistent}.
+\end{lemma}
+
+\begin{theorem}[Completeness and consistency]
+	Let $\mathfrak{D}$ be a Hilbert proof system that is complete for propositional logic
+	and enjoys the deduction property.
+	Then the following statements are equivalent:
+	\begin{itemize}
+		\item $\mathfrak{D}$ is complete, i.e., $\mathfrak{F} \Vdash \phi$ implies $\mathfrak{F} \vdash_{\mathfrak{D}} \phi$ 
+		\item $\mathfrak{D}$-consistency implies satisfiability, i.e., each $\mathfrak{D}$-consistent formula set is satisfiable.
+	\end{itemize}
+\end{theorem}
+\see{p. 26f.}
+\begin{note}
+	This does not only apply to FOL, but for every logic and deductive calculus that meets the deduction property and is complete for propositional logic.
+	For sound and complete proof systems, the notions $\mathfrak{D}$-consistency and satisfiability coincide, i.e.\ :
+	\[
+		\mathfrak{D} \text{ is sound and complete} \iff \begin{cases}
+		\text{for all formula sets $\mathfrak{F}$:} \\
+		\mathfrak{F} \text{ is $\mathfrak{D}$-consistent} \iff \mathfrak{F} \text{ is satisfiable}
+		\end{cases}
+\end{note}
