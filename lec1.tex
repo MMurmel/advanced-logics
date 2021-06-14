@@ -7,7 +7,7 @@ Therefore it is not my goal to be as precise as the lecture script,
 but rather summarize it and highlight important results.
 Whenever details are left out,
 I will try to reference the corresponding position in the script by the icon on the right.
-\see{p. 0}
+\see{0}
 The first number will be the number of the lecture and everything following the page.
 
 \chapter{First-order Logic}
@@ -24,7 +24,7 @@ A vocabulary is called \textit{relational} iff $\var{Func}_m = \emptyset$ for al
 
 Variables are elements of some infinite countable set $\var{Var}$.
 
-\begin{definition}[Terms and Formulas]\see{p. 1f.}
+\begin{definition}[Terms and Formulas]\see{1f.}
 	We define FOL terms over some vocabulary $\var{Voc}$ inductively:
 	\begin{itemize}
 		\item $x$ is a term for every $x \in \var{Var}$
@@ -67,7 +67,7 @@ We further derive the following logical operators:
 Often we will skip the references to the vocabulary and variable-set and assume some fixed vocabulary.
 
 \subsubsection{Free variables}
-\see{p. 4}
+\see{4}
 We distinguish the occurrences of variables in a formula $\phi$ into free and bound occurrences.
 \begin{definition}
 The set of free variables $\func{Free}(\phi)$ for a formula $\phi$ is defined inductively:
@@ -93,7 +93,7 @@ A formula $\phi$ is called  \textit{closed}, or a \textit{sentence}, if $\func{F
 \begin{notation}
 We will write $\phi(x_1,\ldots,x_n)$ to indicate that $\func{Free}(\phi) \subseteq \left\{ x_1, \ldots, x_n \right\}$.
 To make things even shorter, we will equivalently use $\phi(\overline{x})$, where $\overline{x}$ denotes the tuple $(x_1, \ldots, x_n)$.
-Similarly, $\exists \overline{x}.\phi$ and $\forall \overline{x}.\phi$ stand for $\exists x_1 \cdots\exists x_n.\phi$ and 
+Similarly, $\exists \overline{x}.\phi$ and $\forall \overline{x}.\phi$ stand for $\exists x_1 \cdots\exists x_n.\phi$ and
 $\forall x_1 \cdots\forall x_n.\phi$.
 Furthermore, we will leave out the dots between consecutive quantifiers.
 \end{notation}
@@ -105,6 +105,7 @@ We denote by $\phi[ x_1/t_1, \ldots, x_n/t_n]$ (for short $\phi[t_1,\ldots,t_n]$
 the formula obtained from $\phi$ by simultaneously replacing all free occurrences of $x_i$ in $\phi$ with $t_i$.
 
 \subsubsection{Subformuals}
+\medskip
 \begin{definition}[Subformulas]
 	The set $\func{subf}(\phi)$ of \textit{subformulas} of $\phi$ is inductively defined:
 	\begin{align*}
@@ -116,7 +117,7 @@ the formula obtained from $\phi$ by simultaneously replacing all free occurrence
 \end{definition}
 
 \subsubsection{Length and word length}
-\see{p. 5f.}
+\see{5f.}
 We define two notions of the \textit{length} of a FOL formula.
 One ($\lvert \cdot \rvert$) adequate for structural induction and the other ($\lVert \cdot \rVert$) adequate for complexity theoretic arguments.
 In both cases we are only interested in the asymptotic (word) lengths.
@@ -149,10 +150,9 @@ And we get the following for every formula $\phi$ :
 		\lVert \forall x.\phi \rVert & \defeq \lVert \phi \rVert + 1
 	\end{align*}
 \end{definition}
-\newpage
 
 \subsection{Semantics of FOL}
-\see{p. 7}
+\see{7}
 \subsubsection{Structures}
 A structure for a vocabulary $\var{Voc} = (\var{Pred},\var{Func})$ is a tuple
 \[
@@ -164,18 +164,18 @@ $P^{\mathcal{A}} \subseteq (\Delta^\mathcal{A})^n$ for $P \in \var{Pred}_n$ and 
 $\mathcal{A}$ is called finite if $\Delta^\mathcal{A}$ is finite.
 
 \subsubsection{Interpretations}
-An interpretation for $(\var{Voc},\var{Var})$ is a pair $\mathcal{I}=(\mathcal{A},\mathcal{V})$, where $\mathcal{A}$ is  a structure for $\var{Voc}$ 
+An interpretation for $(\var{Voc},\var{Var})$ is a pair $\mathcal{I}=(\mathcal{A},\mathcal{V})$, where $\mathcal{A}$ is  a structure for $\var{Voc}$
 and $\mathcal{V} : \var{Var} \to \Delta^\mathcal{A}$ is a variable valuation.
 We call $(\mathcal{A}, \mathcal{V})$ an $\mathcal{A}$-interpretation.
 The meaning of terms under an $\mathcal{A}$-interpretation $\mathcal{I}$ is defined as follows:
 \begin{itemize}
-	\item $x^\mathcal{I} \defeq \mathcal{V}(x)$ for each $x \in \var{Var}$ 
+	\item $x^\mathcal{I} \defeq \mathcal{V}(x)$ for each $x \in \var{Var}$
 	\item $f(t_1, \ldots, t_m)^\mathcal{I} \defeq f^\mathcal{A}(t_1^\mathcal{I}, \ldots, t_m^\mathcal{I})$ for each $f \in \var{Func}_m$
 \end{itemize}
 Therefore $c^\mathcal{I} = c^\mathcal{A}$ for each $c \in \var{Func}_0 = \var{Const}$.
 
 \subsubsection{Satisfaction relation $\vDash$}
-\see{p. 7f.}
+\see{7f.}
 Let $\mathcal{I} = (\mathcal{A}, \mathcal{V})$ be an interpretation, $x \in \var{Var}$ and $a \in \Delta^\mathcal{A}$. \\
 We define $\mathcal{I}[x \coloneqq a] \defeq (\mathcal{A}, \mathcal{V}[x \coloneqq a])$, where
 \[
@@ -197,7 +197,7 @@ We define $\mathcal{I}[x \coloneqq a] \defeq (\mathcal{A}, \mathcal{V}[x \colone
 	\end{alignat*}
 \end{definition}
 \begin{notation}
-	We use the notation 
+	We use the notation
 	\[
 		(\mathcal{A}, a_1, \ldots, a_n) \vDash \phi(x_1, \ldots, x_n)
 	\]
@@ -216,7 +216,7 @@ Thus, if $\func{Free}(\phi) = \left\{ x_1, \ldots, x_n \right\}$, then
 A structure $\mathcal{A}$ is called a \textit{model} for a formula-set $\mathfrak{F}$ if $\mathcal{A} \vDash \phi$ for all $\phi \in \mathfrak{F}$.
 
 \subsubsection{Substitution lemma}
-\see{p. 8}
+\see{8}
 We say that a variable $x$ can be replaced with a term $t$ in a formula $\phi$ iff this substitution $\phi(x/t)$ would not create a new binding.
 \begin{lemma}[Substitution lemma]
 	Let $\mathcal{I} = (\mathcal{A}, \mathcal{V})$ be an interpretation, $\phi$ a formula,
@@ -236,9 +236,9 @@ We cal a FOL-formula $\phi$ a \textit{propositional tautology} if $\phi = \varph
 for any valid propositional formula $\varphi$, boolean variables $\overline{q}$ and FOL-formulas $\overline{\psi}$.
 
 \subsubsection{Satisfiability}
-\see{p. 9}
+\see{9}
 A formula $\phi$ is called \textit{satisfiable} if $\mathcal{I} \vDash \phi$  for some interpretation $\mathcal{I}$ (similar for formula set $\mathfrak{F}$).
-A formula set $\mathfrak{F}$ is called 
+A formula set $\mathfrak{F}$ is called
 \begin{itemize}
 	\item \textit{finitely satisfiable} if each finite subset of $\mathfrak{F}$ is satisfiable,
 	\item \textit{satisfiable over structure} $\mathcal{A}$, if $(\mathcal{A},\mathcal{V}) \vDash \mathfrak{F}$ for some valuation $\mathcal{V}$,
