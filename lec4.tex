@@ -1,0 +1,93 @@
+\lecture{4}{23.04.2021}{}
+Hilbert proof systems can even be defined in a more general way.
+When done like in the lecture, they are also applicable to FOL over arbitrary (possibly uncountable) vocabularies and variable-sets. 
+\see{29}
+By this more general notion, one obtains the fact, that there are sound and complete Hilbert proof systems,
+even for FOL over arbitrary vocabularies and variable-sets.
+Therefore, all properties derived from Gödel's completeness theorem for FOL hold for arbitrary vocabularies;
+except for the consideration of the following Lemma \ref{lem:semi decidability FOL tautologies}.
+
+\begin{lemma}[Semi-decidability of FOL-tautologies]\label{lem:semi decidability FOL tautologies}
+	The set of all valid FOL-formulas (over some recursively enumerable sets $\var{Voc}$ and $\var{Var}$) is recursively enumerable.
+	\see{29f.}
+\end{lemma}
+\begin{note}
+	Since the existence of a recursive enumeration is equivalent to semi-decidability,
+	the set of all valid FOL-formulas is also semi-decidable,
+	i.e.\ there exists a algorithm that, when run on a FOL formula $\phi$ as input,
+	will terminate and answer "yes" if $\phi$ is a tautology.
+	In the case that $\phi$ is not a tautology the algorithm may halt and answer "no"
+	or it may not terminate.
+	
+	Furthermore, in the proof of this lemma, no property specific to FOL is used.
+	The mere existence of sound and weakly complete deductive calculi for a logic is enough
+	to imply that the set of all tautologies of that logic is recursively enumerable.
+\end{note}
+
+\newpage
+
+\section{Undecidability of FOL}
+Even though, the set of all valid FOL-formulas is recursively enumerable, and hence semi-decidable,
+it is not decidable.
+In this section, we will show the undecidability of important decision problems for FOL.
+We will focus on an underlying vocabulary $\var{Voc}_{\omega}$ of countably many predicate and function symbols of arbitrary arity.
+\see{30}
+The details involved with this assumption will not be considered, as they are fairly technical.
+
+\begin{theorem}[Undecidability of FOL]
+	The following problems for FOL-sentences over $\var{Voc}_{\omega}$ are undecidable:
+	\begin{itemize}
+		\item validity problem: "is $\phi$ valid?"
+		\item satisfiability problem: "is $\phi$ satisfiable?"
+		\item equivalence problem: "does $\phi \equiv \psi$ hold?"
+		\item consequence problem: "does $\phi \Vdash \psi$ hold?"
+	\end{itemize}
+\end{theorem}
+\begin{proof}
+	At first, we observe that undecidability of one of these problems also implies undecidability of the others:
+	\[
+	\phi \text{ is valid } \iff  \neg \phi \text{ is not satisfiable } \iff \var{true} \equiv \phi \iff \var{true} \Vdash \phi
+	.\]
+	It remains to show, that one of them is indeed undecidable.
+	\see{31ff.}
+	In the script this is shown by a reduction from the \textit{Post's correspondence problem} (PCP),
+	which is known to be undecidable.
+	\qedhere
+\end{proof}
+
+\subsection{Tragkatenbrots Theorem}
+One could have the idea, that the undecidability of FOL is a result of the fact that models can have infinite domains.
+However, nothing could be further from the truth.
+We will show that even the finitary validity problem "does a given FOL-sentence hold for all finite structures?" is undecidable.
+
+\begin{theorem}[Finite model property violated by FOL]
+	There exist satisfiable FOL-sentences that do not have a finite model,
+	and FOL-sentences that hold for all finite structures, but are not valid.
+\end{theorem}
+\begin{proof}
+	Let $P \in \var{Pred}_2$. We define $\phi \defeq \phi_1 \land \phi_2 \land \neg \phi_3$ where:
+	\begin{align*}
+		\phi_1 &\defeq \forall x \exists y. P(x,y) \\
+		\phi_2 &\defeq \forall x \forall y \forall z. (P(x,y) \land P(y, z) \to P(x,z)) \\
+		\phi_3 &\defeq \exists x.P(x,x)
+	\end{align*}
+	One can easily show that every model of $\phi$ is infinite.
+	
+	Furthermore, $\phi' \defeq \phi_1 \land \phi_2 \to \phi_3$ can be shown to hold for all finite structures.
+	However, it is not valid.
+\end{proof}
+Thus, finitary satisfiability is weaker that the standard notion of satisfiability,
+and the set of valid FOL-sentences is a true subset of the set of FOL-sentences that are true for all finite structures.
+
+The following still focuses on the vocabulary $\var{Voc}_\omega$ and an infinite set $\var{Var}$ of variables.
+\begin{notation}
+	We use special names for the sets discussed earlier:
+	\begin{itemize}
+		\item $\var{FOL-SAT}$: the set of FOL-sentences that are satisfiable
+		\item $\var{FOL-VALID}$: the set of valid FOL-sentences 
+		\item $\var{FOL-SAT-FIN}$: the set of FOL-sentences having at least one finite model
+		\item $\var{FOL-VALID-FIN}$: the set of FOL-sentences holding for all finite structures
+	\end{itemize}
+\end{notation}
+
+%p. 35

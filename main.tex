@@ -5,6 +5,7 @@
 
 %Spezielle Schriftart für \mathcal{...}
 \usepackage[mathcal]{euscript}
+\renewcommand{\var}[1]{\textit{#1}}
 
 \usepackage[]{proof}
 
@@ -13,7 +14,7 @@
 \usepackage[]{tcolorbox}
 \makeatother
 \newcommand{\see}[1]{
-	\marginnote{\faEye\ \thelecture/#1}[-0.25cm]
+	\marginnote{\faEye\ \thelecture/#1}
 }
 \makeatletter
 
@@ -24,5 +25,6 @@
 	\input{lec1.tex}
 	\input{lec2.tex}
 	\input{lec3.tex}
+	\input{lec4.tex}
 	% end of lectures
 \end{document}
