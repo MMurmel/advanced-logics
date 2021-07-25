@@ -1,0 +1,27 @@
+\lecture{16}{17.06.2021}{}
+...
+
+\chapter{Second order logic}
+With second order logic (SOL) we now discuss a powerful extension of FOL,
+where one is allowed to quantify over predicates and functions.
+Since FOL already contains undecidable problems and SOL is a true superset of FOL,
+we cannot expect these problems to be decidable for SOL.
+
+\section{Syntax and semantics of SOL}
+We assume a fixed vocabulary $\var{Voc} = \left( \var{Pred}, \var{Func} \right)$
+and need to deal with three kinds of variables:
+\begin{itemize}
+	\item FO-variables $x, y, z, \ldots \in \var{Var}$: as in FOL elements of the domain
+	\item predicate variables $X, Y, Z, \ldots \in \var{PVar}$: predicates over the domain
+	\item function variables $F, G, H, \ldots \in \var{FVar}$ : functions over the domain
+\end{itemize}
+Predicate variables and function variables are often called second-order variables.
+Like predicate or function symbols they are assumed to be classified by their arity:
+\[
+	\var{PVar} = \biguplus_{i \geq 0} \var{PVar}_{i},\qquad \var{FVar} = \biguplus_{i \geq 1} \var{FVar}_i
+\]
+where $\var{PVar}_n$ and $\var{FVar}_m$ are predicates of arity $n$ and $m$, respectively.
+We skip $\var{FVar}_0$, because its elements would be equivalent to first-order variables.
+Obviously, $\var{Var}, \var{PVar}, \var{FVar}$ and $\var{Voc}$ all need to be pairwise disjoint.
+
+\subsection{Syntax of SOL}
