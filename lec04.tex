@@ -11,6 +11,15 @@ except for the consideration of the following Lemma \ref{lem:semi decidability F
 	The set of all valid FOL-formulas (over some recursively enumerable sets $\var{Voc}$ and $\var{Var}$) is recursively enumerable.
 	\see{29f.}
 \end{lemma}
+\begin{proof}
+	Since the sets $\var{Voc}$ and $\var{Var}$ are said to be recursively enumerable,
+	so are all formulas over $\left( \var{Voc}, \var{Var} \right)$.
+	But then all finite sequences of formulas $\psi_1, \ldots, \psi_m$ are also recursively enumerable.
+	Since there is a sound and complete Hilbert proof system for FOL, we can then check,
+	whether these sequences are $\mathfrak{D}$-derivations.
+	If yes, the last formula $\psi_m$ will be returned, else the sequence gets ignored.
+	By this we obtain a recursive (non-terminating) enumeration algorithm for FOL tautologies.
+\end{proof}
 \begin{note}
 	Since the existence of a recursive enumeration is equivalent to semi-decidability,
 	the set of all valid FOL-formulas is also semi-decidable,
@@ -44,18 +53,18 @@ The details involved with this assumption will not be considered, as they are fa
 	\end{itemize}
 \end{theorem}
 \begin{proof}
+	\see{31ff.}
 	At first, we observe that undecidability of one of these problems also implies undecidability of the others:
 	\[
 	\phi \text{ is valid } \iff  \neg \phi \text{ is not satisfiable } \iff \var{true} \equiv \phi \iff \var{true} \Vdash \phi
 	.\]
 	It remains to show, that one of them is indeed undecidable.
-	\see{31ff.}
 	In the script this is shown by a reduction from the \textit{Post's correspondence problem} (PCP),
 	which is known to be undecidable.
 	\qedhere
 \end{proof}
 
-\subsection{Tragkatenbrots Theorem}
+\subsection{Trakhtenbrot's Theorem}
 One could have the idea, that the undecidability of FOL is a result of the fact that models can have infinite domains.
 However, nothing could be further from the truth.
 We will show that even the finitary validity problem "does a given FOL-sentence hold for all finite structures?" is undecidable.
@@ -89,9 +98,49 @@ The following still focuses on the vocabulary $\var{Voc}_\omega$ and an infinite
 		\item $\var{FOL-VALID-FIN}$: the set of FOL-sentences holding for all finite structures
 	\end{itemize}
 \end{notation}
-The following results are shown in the lecture in great detail:
-\see{35-42}
 \begin{figure}[H]
+	\see{35}
 	\centering
 	\includegraphics[width=\textwidth]{./figures/satisfaction_inclusions.png}
+	\caption{Visualization of inclusions between these sets}
 \end{figure}
+The results for semi-decidability depicted in the graphic above are shown in the lecture in great detail.
+Here, we will only look at the ideas behind these proofs.
+
+\begin{lemma}[$\var{FOL-SAT-FIN}$]
+	$\var{FOL-SAT-FIN}$ is recursively enumerable
+\end{lemma}
+\begin{proof}
+	\see{35}
+	Obviously, the set of finite structures is recursively enumerable (up to isomorphism).
+	For any formula $\phi$ over $\var{Voc}_\omega$ we can enumerate all finite structures $\mathcal{A}_1, \mathcal{A}_2, \ldots$
+	and check whether $\mathcal{A}_i \vDash \phi$ (recursively, according to the definition of $\vDash$).
+\end{proof}
+
+\begin{lemma}[$\var{FOL-SAT-FIN}$]
+	$\var{FOL-SAT-FIN}$ is undecidable.	
+\end{lemma}
+\begin{proof}
+	\see{35-40}
+	By a reduction of the halting problem for any deterministic Turing machine $\mathcal{T}$.
+	The proof makes use of a 4-ary predicate symbol $P$ with the semantics that
+	\[
+		(t, q, w_l, w_r) \in P \iff \sqcup q_0 \sqcup \vdash^t_{\mathcal{T}} w_l q w_r
+	,\]
+	where $\sqcup$ stands for the blank symbol and $\vdash^t_{\mathcal{T}}$ for the transition relation of $\mathcal{T}$ after $t$ steps.
+	By encoding constraints on the progression of the Turing machine and the configurations on the tape
+	in FOL, we can reduce $\mathcal{T}$ to a formula $\phi_{\mathcal{T}}$ such that:
+	\[
+		\sqcup q_0 \sqcup \vdash^t_{\mathcal{T}} \mathfrak{a}_1 \ldots \mathfrak{a}_l p \mathfrak{b}_1 \ldots \mathfrak{b}_r \implies \phi_{\mathcal{T}} \Vdash P(\func{succ}^t(0), p, f_{\mathfrak{a}_1 \ldots \mathfrak{a}_l }(0), f_{\mathfrak{b}_1 \ldots \mathfrak{b}_r }(0))
+	.\]
+	And by quite technical subproofs it can be shown that:
+	\[
+		\mathcal{T} \text{ halts for the empty input word } \iff \phi_{\mathcal{T}} \text{ has a finite model} \qedhere
+	.\]
+\end{proof}
+\begin{lemma}[$\var{FOL-VALID}$]
+	$\var{FOL-VALID}$ is undecidable.
+\end{lemma}
+\begin{proof}
+	By a slight variant in the construction of $\phi_{\mathcal{T}}$ in the proof above.
+\end{proof}
