@@ -1,2 +1,226 @@
-\subsection{Monadic first-order logic}
 \lecture{5}{29.04.2021}{}
+\begin{lemma}[$\var{FOL-VALID-FIN}$ (Trakhtenbrot's Theorem)]\label{lem:Trakhtenbrot}
+	$\var{FOL-VALID-FIN}$ is not recursively enumerable.
+\end{lemma}
+\begin{proof}
+	By the following argumentation:
+	\begin{align*}
+		&\phi \notin \var{FOL-SAT-FIN} \\
+		\iff &\mathcal{A} \not\vDash \phi \text{ for all finite structures } \mathcal{A} \\
+		\iff & \mathcal{A} \vDash \neg \phi \text{ for all finite structures } \mathcal{A} \\
+		\iff &\neg \phi \in \var{FOL-VALID-FIN}
+	\end{align*}
+	Hence, semi-decidability of $\var{FOL-VALID-FIN}$ would imply
+	semi-decidability of the complement of $\var{FOL-SAT-FIN}$,
+	i.e.\ decidability of $\var{FOL-SAT-FIN}$. $\contra$
+\end{proof}
+\newpage
+
+For special subsets of FOL, decidability can actually be reached.
+Two of these will be discussed in the following two subsections.
+
+\subsection{Monadic first-order logic}
+Monadic first-order-logic (MFO) is FOL over purely relational vocabularies,
+but only monadic (unary) predicate symbols are allowed.
+
+MFO enjoys the bounded model property, i.e.\ if a MFO formula $\phi$ is satisfiable,
+then it is also satisfiable by a finite model whose domain is bounded.
+\begin{lemma}[Finite model property of MFO]\label{lem:fmp of mfo}
+	If $\phi$ is a satisfiable MFO-formula with $k$ predicate symbols,
+	then $\phi$ has a model where the domain is a subset of $\left\{ 0,1 \right\}^k$.
+\end{lemma}
+\begin{proof}
+	\see{43}
+	The proof works analogous to $S$-filtration (see Description Logic lecture notes).
+	Note that the only possibility to distinguish two elements of the domain of a given MFO-structure
+	is by the atomic formulas $P_i(x)$.
+	All elements that belong to exactly the same $P_i$ can therefore be identified,
+	leaving only $2^k$ unique elements.
+	Up to isomorphism, these are exactly the structures whose domain is a subset of $\left\{ 0,1 \right\}^k$.
+\end{proof}
+
+A decision procedure for satisfiability of a MFO-formula $\phi$ is obtained as follows:
+Remember that $\phi$ is finite and therefore contains only finitely many predicate symbols and free variables.
+Then observe that there are only finitely many interpretations $\mathcal{I} = (\mathcal{A}, \mathcal{V})$,
+where the domain of $\mathcal{A}$ is a subset of $\left\{ 0,1 \right\}^k$.
+Computing the truth value of $\phi$ under each of these $\mathcal{I}$ can be done recursively according to the definition of $\vDash$.
+If $\mathcal{I} \vDash \phi$ for some $\mathcal{I}$, $\phi$ is clearly satisfiable.
+In the case that $\mathcal{I} \not\vDash \phi$ for all $\mathcal{I}$, $\phi$ can not be satisfiable by lemma \ref{lem:fmp of mfo}.
+
+\begin{corollary}[Decidability of MFO]
+	The satisfiability, validity, consequence and equivalence problem are decidable for MFO.
+\end{corollary}
+\begin{proof}
+	\begin{itemize}
+		\item satisfiability: shown above
+		\item validity: $\Vdash \phi \iff \neg \phi$ is unsatisfiable
+		\item consequence $\phi \Vdash \psi \iff \Vdash (\phi \to \psi)$
+		\item equivalence: $\phi \equiv \psi \iff \phi \Vdash \psi$ and $\psi \Vdash \phi$ 
+			\qedhere
+	\end{itemize}
+\end{proof}
+\begin{note}
+	There is actually no more efficient algorithm, since the satisfiability problem for MFO is \textsc{NExpTime}-complete (without proof).
+\end{note}
+
+\newpage
+\subsection{Schönfinkel-Bernays formulas}
+\see{44}
+A Schönfinkel-Bernays formula is a FOL-formula of the form
+\[
+\exists x_1, \ldots x_n \forall y_1, \ldots \forall y_m.\psi
+\]
+where $\psi$ is a quantifier-free formula without equality over some relational vocabulary.
+For Schönfinkel-Bernays sentences an even stronger property holds, the \textit{small model property}, i.e.\ models have a size \textit{linear} in the size of the formula.
+\begin{lemma}[Small model property of Schönfinkel-Bernays]
+	If $\phi$ is a satisfiable Schönfinkel-Bernays formula with $n$ existential quantifiers and $l$ constant symbols,
+	them $\phi$ has a model with at most $n+l$ elements.
+\end{lemma}
+\begin{proof}
+	\see{45}
+	The proof works by reducing any model $\mathcal{A}$ of $\phi$ into a substructure $B$, that only contains the elements necessary for satisfying $\phi$.
+	Since $\mathcal{A} \vDash \phi$, there are some $a_1, \ldots, a_n \in \Delta^{\mathcal{A}}$ such that
+	\[
+		\left( \mathcal{A}, \left[ x_1 \coloneqq a_1, \ldots, x_n \coloneqq a_n \right] \right) \vDash \forall y_1 \ldots \forall y_m. \psi
+	.\]
+	We can then define $\mathcal{B}$ as follows:
+	\begin{itemize}
+		\item $\Delta^{\mathcal{B}} \defeq \left\{ a_1, \ldots, a_n \right\} \cup \left\{ c_1^{\mathcal{A}}, \ldots, c_n^{\mathcal{A}} \right\}$
+		\item $c_i^{\mathcal{B}} \defeq c_i^{\mathcal{A}}$ for all constant symbols
+		\item $P^{\mathcal{B}} \defeq P^{\mathcal{A}} \cap (\Delta^{\mathcal{B}})^k$ for all $k$-ary predicate symbols $P$.
+	\end{itemize}
+	It is then easy to see that $\left| \Delta^{\mathcal{B}} \right| \leq n + l$ and $\mathcal{B} \vDash \phi$.
+\end{proof}
+
+A decision procedure for satisfiability of Schönfinkel-Bernays formulas is obtained similarly to the decision procedure for MFO.
+In this case however, only \textit{linearly} many models need to be considered.
+
+\begin{corollary}[Decidability of Schönfinkel-Bernays]
+	The satisfiability, validity, consequence and equivalence problem are decidable for Schönfinkel-Bernays formulas.
+\end{corollary}
+
+\newpage
+\section{Axiomatizability of FO theories}
+So far, we have looked at decidability and deductive calculi for standard FOL semantics.
+In this section we will extend these considerations to formula sets that are true in some fixed structure, so called FO-theories.
+
+\subsection{First-order theories}
+\medskip
+\begin{definition}[First-order theory]
+	Let $\mathfrak{T}$ be a set of FOL-formulas.
+	$\mathfrak{T}$ is called \textit{closed under logical consequences} if $\mathfrak{T} \Vdash \phi$ implies $\phi \in \mathfrak{T}$.
+	$\mathfrak{T}$ is called an \textit{FO-theory} (or a \textit{theory}) if $\mathfrak{T}$ is true in some structure and closed under logical consequences.
+\end{definition}
+\begin{note}
+	Each theory contains all valid formulas.
+	Furthermore at most one of the formulas $\phi$ and $\neg\phi$ can belong to $\mathfrak{T}$.
+	If $\mathfrak{B}$ is a satisfiable formula set that is true in some structure,
+	then its logical closure $\func{Cl}(\mathfrak{B}) \defeq \left\{ \phi \mid \mathfrak{B} \Vdash \phi \right\}$ is a theory.
+	In particular, $\func{Cl}(\mathfrak{B})$ is a theory for each satisfiable set of FOL-sentences.
+\end{note}
+
+\begin{definition}[Completeness of a theory]
+	A theory $\mathfrak{T}$ is called \textit{complete} if for all sentences $\phi$ either $\phi \in \mathfrak{T}$ or $\neg\phi \in \mathfrak{T}$ holds.
+\end{definition}
+\begin{note}
+	$\phi \notin \mathfrak{T}$ and $\neg \phi \notin \mathfrak{T}$ is still possible for complete theories and formulas that contain free variables.
+\end{note}
+
+\begin{lemma}\label{lem:universal closure in complete theories}
+	Let $\mathfrak{T}$ be a complete theory, then the following holds for each FOL formula $\phi(\overline{x})$ :
+	\[
+		\phi(\overline{x}) \in \mathfrak{T} \iff \forall \overline{x}.\phi(\overline{x}) \in \mathfrak{T}
+	.\]
+\end{lemma}
+\begin{proof}
+	\see{46}
+	"$ \impliedby$" holds for every theory.
+	"$ \implies$" is shown using the completeness of $\mathfrak{T}$.
+\end{proof}
+
+\begin{definition}[FO-theory of a structure]
+	If $\mathcal{A}$ is a structure, then the \textit{first-order theory} of $\mathcal{A}$,
+	denoted by $\func{Th}(\mathcal{A})$, is defined as:
+	\[
+		\func{Th}(\mathcal{A}) \defeq \left\{ \phi \mid A \vDash \phi \right\}
+	.\]
+\end{definition}
+\begin{note}
+	$\func{Th}(\mathcal{A})$ is indeed a theory and obviously complete,
+	because because for all sentences $\phi$, $\mathcal{A} \vDash \phi$ or $\mathcal{A} \vDash \neg \phi$,
+	but never both.
+\end{note}
+\begin{notation}
+	For finite vocabularies, FO-theories induced by structures are often written as
+	\[
+	\func{Th}(\Delta^{\mathcal{A}}, P_1, \ldots, P_k, f_1, \ldots, f_r)\quad\text{or}\quad\func{Th}(\Delta^{\mathcal{A}}, P_1, \ldots, P_k, f_1, \ldots, f_r, =)
+	,\]
+	depending on whether FOL with or without equality is used.
+\end{notation}
+\begin{example}
+	The FO-theory of arithmetic is written as $\func{Th}(\N, +, *, =)$.
+	While $<$ is not defined by the structure itself, one can easily see,
+	that the following definition is indeed a correct one for this structure:
+	\[
+		z < y \defeq z \neq y \land \exists u.(z+u=y) 
+	.\]
+	For the structure of the reals $\func{Th}(\R, +, *, =)$ (also called \textit{Tarski algebra}) a different definition would be needed (because of negative numbers).
+	E.g.:
+	\[
+		z < y \defeq z \neq y \land \exists u.(z+(u*u) = y) 
+	.\]
+
+	Consider the following sentence:
+	\[
+		\phi = \forall x \forall y.(x<y \to \exists z.(x<z \land z<y))
+	.\]
+	With the respective definition of < we get
+	\[
+		\phi \in \func{Th}(\R, +, *, =) \quad \text{but} \quad \phi \notin \func{Th}(\N, +, *, =)
+	.\]
+\end{example}
+\begin{theorem}[Characterization of complete theories]
+	Let $\mathfrak{T}$ be a FO-theory.
+	Then, the following statements are equivalent:
+	\begin{enumerate}
+		\item $\mathfrak{T}$ is complete.
+		\item $\mathfrak{T} = \func{Th}(\mathcal{A})$ for some structure $\mathcal{A}$.
+		\item $\mathfrak{T} = \func{Th}(\mathcal{A})$ for all structures $\mathcal{A}$ such that $\mathcal{A} \vDash \mathfrak{T}$.
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	\see{48}
+	By showing $3. \implies 2. \implies 1. \implies 3.$
+\end{proof}
+
+\begin{theorem}[Semi-decidability and decidability of complete theories]
+	Let $\mathfrak{T}$ be a complete theory.
+	Then, $\mathfrak{T}$ is recursively enumerable iff it is decidable.
+\end{theorem}
+\begin{proof}
+	"$\impliedby$": Always holds.\\
+	"$\implies$":
+	For $\phi(\overline{x})$ we know by Lemma \ref{lem:universal closure in complete theories} that
+	\[
+	\phi \in \mathfrak{T} \iff \psi \defeq \forall \overline{x}.\phi \in \mathfrak{T}
+	.\]
+	This can be decided using a recursive enumeration $\theta_1, \theta_2, \ldots$ of $\mathfrak{T}$,
+	by stopping as soon as $\psi$ or $\neg \psi$ is encountered.
+	This procedure terminates since $\psi$ is a sentence and $\mathfrak{T}$ is complete.
+\end{proof}
+
+\newpage
+\subsection{Axiomatizability and decidability}
+\medskip
+\begin{definition}[Axiomatizable theories]
+	A theory $\mathfrak{T}$ is called \textit{axiomatizable} if it is the logical closure of a decidable (sub)set, i.e.:
+	\[
+		\mathfrak{T} = \left\{ \phi \mid \mathfrak{F} \Vdash \phi\right\} = \func{Cl}(\mathfrak{F})
+	.\]
+	$\mathfrak{F}$ is called the \textit{axiomatization} of $\mathfrak{T}$.
+	If $\mathfrak{F}$ is finite, $\mathfrak{T}$ is called \textit{finitely axiomatizable}.
+\end{definition}
+\begin{note}
+	If $\mathfrak{F} = \left\{ \phi_1, \ldots, \phi_n \right\}$ is a finite axiomatization of $\mathfrak{T}$,
+	then $\left\{ \bigwedge_{i=1}^{n} \phi_i \right\}$ is an axiomatization of $\mathfrak{T}$ with only one element.
+\end{note}
